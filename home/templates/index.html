@@ -45,32 +45,47 @@
     background-color: Teal !important;
     border-color: Teal !important;
   }
+
+  .submit_loading {
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    background-color:#000;
+    text-align:center;
+    opacity:0.3;
+  }
+  .loading_show {
+      margin-top:15%;
+  }
+  .loading_context {
+      color:#fff;
+  }
   {% comment %} DarkSlateGray {% endcomment %}
 </style>
 <body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">LPN Estimator</a>
+        <a class="navbar-brand" href="">LPN Estimator</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-            <a class="nav-link" href="#">Features</a>
-            <a class="nav-link" href="#">Pricing</a>
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+            <a class="nav-link" href="/contact">Contact</a>
           </div>
         </div>
       </div>
     </nav>
     {% comment %} <form role="form" method="post" action="/show/"> {% endcomment %}
-
     <form role="form" method="post" onsubmit="return validateForm(form)" id='form' action="/">
         {% csrf_token %}
         <div class="container">
-          <h4 style="color:DarkCyan;">Noise Distribution</h4>
+          <h3>Estimator for LPN Bit Security</h3>
+          <h5 style="color:DarkCyan;">Noise Distribution</h5>
             <div class="row">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="noise" id="ex" checked="true" value="exact">
@@ -83,7 +98,7 @@
             </div>
             
             <div class="row">
-              <h4 style="color:DarkCyan;">Decoding Type</h4>
+              <h5 style="color:DarkCyan;">Decoding Type</h5>
               <div class="from-switch form-switch form-switch-inline">
                 <input class="form-check-input" name="dual" type="checkbox" role="switch" id="dual_switch" value="dual" onclick="change_op_input('dual_switch')">
                 <label class="form-check-label" for="dual_switch">Dual form of LPN</label>
@@ -91,7 +106,7 @@
             </div>
 
             <div class="row">
-                <h4 style="color:DarkCyan;">Algebra Structure</h4>
+                <h5 style="color:DarkCyan;">Algebra Structure</h5>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="field" value="f2" id="1" checked="true" onclick="type_choose('1')">
                   <lable class="form-check-label" for="1">Over `\mathbb{F}_2`</label>
@@ -106,7 +121,7 @@
                 </div>
             </div>
 
-            <h4 style="color:DarkCyan;">Parameters</h4>
+            <h5 style="color:DarkCyan;">Parameters</h5>
             <div class="row">
               <div class="col-1">
                 <label for="input-query-num" class="col-form-label">N = </label>
@@ -207,11 +222,18 @@
             </div>
         </div>
     </form>
+
+  <div id="loading" class="submit_loading" style="display:none">
+    <div class="loading_show">
+        <p class="loading_context">Computing... This may take a few moments...</p>
+    </div>
+  </div>
+
     <div class="container">
       <div class="row">
-        <h4 style="color:DarkCyan;">Results</h4>
+        <h5 style="color:DarkCyan;">Results</h5>
         <div class="col">
-          <p>{{ result }}</p>
+          <p style="color:Crimson;">{{ result }}</p>
         </div>
       </div>
     <script>
@@ -251,6 +273,7 @@
           alert("Bit size of ring must be a positive integer");
           return false;
         }
+        document.getElementById("loading").style.display = "block";
       }
     </script>
 </body>

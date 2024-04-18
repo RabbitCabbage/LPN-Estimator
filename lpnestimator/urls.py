@@ -23,5 +23,5 @@ from home.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', calculator, name='calculator'),
-    # path('show/', show, name='show'),
+    path('contact/', contact, name='contact')
 ]
