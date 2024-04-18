@@ -67,7 +67,7 @@
     </nav>
     {% comment %} <form role="form" method="post" action="/show/"> {% endcomment %}
 
-    <form role="form" method="post" action="/">
+    <form role="form" method="post" onsubmit="return validateForm(form)" id='form' action="/">
         {% csrf_token %}
         <div class="container">
           <h4 style="color:DarkCyan;">Noise Distribution</h4>
@@ -85,7 +85,7 @@
             <div class="row">
               <h4 style="color:DarkCyan;">Decoding Type</h4>
               <div class="from-switch form-switch form-switch-inline">
-                <input class="form-check-input" name="dual" type="checkbox" role="switch" id="dual_switch" value="dual" onclick="change_op_input('dual_switch', 'input-dual-n')">
+                <input class="form-check-input" name="dual" type="checkbox" role="switch" id="dual_switch" value="dual" onclick="change_op_input('dual_switch')">
                 <label class="form-check-label" for="dual_switch">Dual form of LPN</label>
               </div>
             </div>
@@ -126,16 +126,20 @@
             </div>
 
             <script>
-              function change_op_input(checkbox_id, input_id){
+              function change_op_input(checkbox_id){
                 var checkbox = document.getElementById(checkbox_id);
                 if(checkbox.checked){
                   {% comment %} enable the input of n {% endcomment %}
-                    var input = document.getElementById(input_id);
-                    input.disabled = false;
+                    var input_n = document.getElementById('input-dual-n');
+                    input_n.disabled = false;
+                    var input_k = document.getElementById('input-secret-len');
+                    input_k.disabled = true;
                 } else {
                   {% comment %} disable the input of n {% endcomment %}
-                    var input = document.getElementById(input_id);
-                    input.disabled = true;
+                    var input_n = document.getElementById('input-dual-n');
+                    input_n.disabled = true;
+                    var input_k = document.getElementById('input-secret-len');
+                    input_k.disabled = false;
                 }
               }
             </script>
@@ -198,7 +202,7 @@
             
             <div class="row">
               <div class="col">
-                <input type="submit" class="btn btn-primary" value="Caculate">
+                <input type="submit" class="btn btn-primary" value="Calculate">
               </div>
             </div>
         </div>
@@ -210,5 +214,44 @@
           <p>{{ result }}</p>
         </div>
       </div>
+    <script>
+      function validateForm(form_id) {
+        var N = document.getElementById("input-query-num").value;
+        var k = document.getElementById("input-secret-len").value;
+        var t = document.getElementById("input-noise-weight").value;
+        var q = document.getElementById("input-ring-size").value;
+        var l = document.getElementById("input-field-size").value;
+        var n = document.getElementById("input-dual-n").value;
+        var dual = document.getElementById("dual_switch").checked;
+        var field = document.getElementById("3").checked;
+        var ring = document.getElementById("2").checked;
+
+        // N must be positive integers, without other characters
+        if (N == "" || isNaN(N) || N <= 0) {
+          alert("Number of queries must be a positive integer");
+          return false;
+        }
+        if (!dual && (k == "" || isNaN(k) || k <= 0)) {
+          alert("Length of secret must be a positive integer");
+          return false;
+        }
+        if (t == "" || isNaN(t) || t <= 0) {
+          alert("Hamming weight of noise must be a positive integer");
+          return false;
+        }
+        if (dual && (n == "" || isNaN(n) || n <= 0)) {
+          alert("Corresponding to COT/VOLE correlations must be a positive integer");
+          return false;
+        }
+        if (field && (l == "" || isNaN(l) || l <= 0)) {
+          alert("Size of field must be a positive integer");
+          return false;
+        }
+        if (ring && (q == "" || isNaN(q) || q <= 0)) {
+          alert("Bit size of ring must be a positive integer");
+          return false;
+        }
+      }
+    </script>
 </body>
 </html>
