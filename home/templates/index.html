@@ -85,7 +85,7 @@
             <div class="row">
               <h4 style="color:DarkCyan;">Decoding Type</h4>
               <div class="from-switch form-switch form-switch-inline">
-                <input class="form-check-input" name="dual" type="checkbox" role="switch" id="dual_switch" value="dual">
+                <input class="form-check-input" name="dual" type="checkbox" role="switch" id="dual_switch" value="dual" onclick="change_op_input('dual_switch', 'input-dual-n')">
                 <label class="form-check-label" for="dual_switch">Dual form of LPN</label>
               </div>
             </div>
@@ -93,15 +93,15 @@
             <div class="row">
                 <h4 style="color:DarkCyan;">Algebra Structure</h4>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="field" value="f2" id="1" checked="true">
+                  <input class="form-check-input" type="radio" name="field" value="f2" id="1" checked="true" onclick="type_choose('1')">
                   <lable class="form-check-label" for="1">Over `\mathbb{F}_2`</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio"   name="field" value="rq" id="2">
+                  <input class="form-check-input" type="radio"   name="field" value="rq" id="2" onclick="type_choose('2')">
                   <lable class="form-check-label" for="2">Over `\mathcal R_q`</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio"   name="field" value="f2l" id="3">
+                  <input class="form-check-input" type="radio"   name="field" value="f2l" id="3" onclick="type_choose('3')">
                   <lable class="form-check-label" for="3">Over `\mathbb{F}_{2^\lambda}`</label>
                 </div>
             </div>
@@ -121,9 +121,44 @@
                 <label for="input-dual-n" class="col-form-label">n = </label>
               </div>
               <div class="col">
-                <input class="form-control" type="text" placeholder="Corresponing to COT/VOLE Correlations" aria-label="default input example" id="input-dual-n" name="n">
+                <input class="form-control" type="text" placeholder="Corresponing to COT/VOLE Correlations" aria-label="default input example" id="input-dual-n" name="n" disabled = "true">
               </div>
             </div>
+
+            <script>
+              function change_op_input(checkbox_id, input_id){
+                var checkbox = document.getElementById(checkbox_id);
+                if(checkbox.checked){
+                  {% comment %} enable the input of n {% endcomment %}
+                    var input = document.getElementById(input_id);
+                    input.disabled = false;
+                } else {
+                  {% comment %} disable the input of n {% endcomment %}
+                    var input = document.getElementById(input_id);
+                    input.disabled = true;
+                }
+              }
+            </script>
+            <script>
+              function type_choose(checkbox_id){
+                var plain = document.getElementById('1');
+                var ring = document.getElementById('2');
+                var field = document.getElementById('3');
+                var input_field_size = document.getElementById('input-field-size');
+                var input_ring_size = document.getElementById('input-ring-size');
+
+                if(plain.checked){
+                  input_field_size.disabled = true;
+                  input_ring_size.disabled = true;
+                } else if(ring.checked){
+                  input_field_size.disabled = true;
+                  input_ring_size.disabled = false;
+                } else if(field.checked){
+                  input_field_size.disabled = false;
+                  input_ring_size.disabled = true;
+                }
+              }
+            </script>
 
             <div class="row">
               <div class="col-1">
@@ -145,19 +180,19 @@
 
             <div class="row">
               <div class="col-1">
-                <label for="input-field-size" class="col-form-label">q = </label>
+                <label for="input-ring-size" class="col-form-label">q = </label>
               </div>
               <div class="col">
-                <input class="form-control" type="text" placeholder="Size of Field" aria-label="default input example" id="input-field-size" name="q">
+                <input class="form-control" type="text" placeholder="Bit Size of Ring" aria-label="default input example" id="input-ring-size" name="q" disabled = "true">
               </div>
             </div>
-
+            
             <div class="row">
               <div class="col-1">
-                <label for="input-ring-size" class="col-form-label">`\lambda` = </label>
+                <label for="input-field-size" class="col-form-label">`\lambda` = </label>
               </div>
               <div class="col">
-                <input class="form-control" type="text" placeholder="Bit Size of Ring" aria-label="default input example" id="input-ring-size" name="l">
+                <input class="form-control" type="text" placeholder="Size of Field" aria-label="default input example" id="input-field-size" name="l" disabled = "true">
               </div>
             </div>
             
