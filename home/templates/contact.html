@@ -74,19 +74,34 @@
         </div>
       </nav>
     <div class="container">
-    <h3>Contact Form</h3>
-    <form role="form">
-        <label for="name" class='col-1'>Name:</label>
-        <input type="text" id="name" name="name" required class='col'><br><br>
+      <div class="py-5 text-center">
+        <h2>Contact form</h2>
+      </div>
+      <div class="col-md-8 col-lg-6 mx-auto">
+        <form role="form">
+          <div class="row g-3">
+            
+            <div class="col-12">
+            <label for="name" >Name:</label>
+            <input type="text" id="name" name="name" required class="form-control"><br><br>
+            </div>
 
-        <label for="email" class='col-1'>Email:</label>
-        <input type="email" id="email" name="email" required class='col'><br><br>
+            <div class="col-12">
+            <label for="email" >Email:</label>
+            <input type="email" id="email" name="email" required class="form-control"><br><br>
+            </div>
 
-        <label for="message" class='col-1'>Message:</label>
-        <textarea id="message" name="message" required class='col'></textarea><br><br>
+            <div class="col-12">
+            <label for="message" >Message:</label>
+            <textarea id="message" name="message" required class="form-control"></textarea><br><br>
+            </div>
 
-        <input type="button" value="Send" onclick="sendMessage()" class="btn btn-primary">
-    </form>
+            <div class="col-12">
+            <input type="button" value="Send" onclick="sendMessage()" class="btn btn-primary">
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
 </body>
 </html>

@@ -116,7 +116,6 @@
               </div>
             </div>
 
-          <div>
             {% comment %} Algebra Structure {% endcomment %}
             <div class="col-12">
                 <h5 style="color:DarkCyan;">Algebra Structure</h5>
@@ -134,57 +133,109 @@
                 </div>
             </div>
 
-            <div class="col-12">
-              <label for="input-ring-size" class="col-form-label">Bit Size of Ring (q) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-ring-size" name="q" disabled = "true">
-            </div>
-            
-            <div class="col-12">
-              <label for="input-field-size" class="col-form-label">Size of Field (`\lambda`) </label>
-                <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-field-size" name="l" disabled = "true">
-            </div>
-          </div>
-
-          <div>
             <h5 style="color:DarkCyan;">Parameters</h5>
-            {% comment %} <h5 style="color:DarkCyan;">Parameters</h5> {% endcomment %}
-            <div class="col-12">
-              <label for="input-query-num" class="col-form-label">Number of Queries (N) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-query-num" name="N">
+            <div class="row">
+              <div class="col-1">
+                <label for="input-query-num" class="col-form-label">N = </label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" placeholder="Number of Queries" aria-label="default input example" id="input-query-num" name="N">
+              </div>
             </div>
 
-
-            <div class="col-12">
-              <label for="input-dual-n" class="col-form-label">Corresponing to COT/VOLE Correlations (n) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-dual-n" name="n" disabled = "true">
+            <div class="row">
+              <div class="col-1">
+                <label for="input-dual-n" class="col-form-label">n = </label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" placeholder="Corresponing to COT/VOLE Correlations" aria-label="default input example" id="input-dual-n" name="n" disabled = "true">
+              </div>
             </div>
 
-            <div class="col-12">
-              <label for="input-secret-len" class="col-form-label">Length of Secret (k)</label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-secret-len" name="k">
+            <script>
+              function change_op_input(checkbox_id){
+                var checkbox = document.getElementById(checkbox_id);
+                if(checkbox.checked){
+                  {% comment %} enable the input of n {% endcomment %}
+                    var input_n = document.getElementById('input-dual-n');
+                    input_n.disabled = false;
+                    var input_k = document.getElementById('input-secret-len');
+                    input_k.disabled = true;
+                } else {
+                  {% comment %} disable the input of n {% endcomment %}
+                    var input_n = document.getElementById('input-dual-n');
+                    input_n.disabled = true;
+                    var input_k = document.getElementById('input-secret-len');
+                    input_k.disabled = false;
+                }
+              }
+            </script>
+            <script>
+              function type_choose(checkbox_id){
+                var plain = document.getElementById('1');
+                var ring = document.getElementById('2');
+                var field = document.getElementById('3');
+                var input_field_size = document.getElementById('input-field-size');
+                var input_ring_size = document.getElementById('input-ring-size');
+
+                if(plain.checked){
+                  input_field_size.disabled = true;
+                  input_ring_size.disabled = true;
+                } else if(ring.checked){
+                  input_field_size.disabled = true;
+                  input_ring_size.disabled = false;
+                } else if(field.checked){
+                  input_field_size.disabled = false;
+                  input_ring_size.disabled = true;
+                }
+              }
+            </script>
+
+            <div class="row">
+              <div class="col-1">
+                <label for="input-secret-len" class="col-form-label">k = </label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" placeholder="Length of Secret" aria-label="default input example" id="input-secret-len" name="k">
+              </div>
             </div>
 
-            <div class="col-12">
-              <label for="input-noise-weight" class="col-form-label">Hamming Weight of Noise (t)</label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-noise-weight" name="t">
+            <div class="row">
+              <div class="col-1">
+                <label for="input-noise-weight" class="col-form-label">t = </label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" placeholder="Hamming Weight of Noise" aria-label="default input example" id="input-noise-weight" name="t">
+              </div>
             </div>
-          </div>
+
+            <div class="row">
+              <div class="col-1">
+                <label for="input-ring-size" class="col-form-label">q = </label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" placeholder="Bit Size of Ring" aria-label="default input example" id="input-ring-size" name="q" disabled = "true">
+              </div>
+            </div>
             
-            <div class="col-12">
-              <input type="submit" class="btn btn-primary" value="Calculate">
+            <div class="row">
+              <div class="col-1">
+                <label for="input-field-size" class="col-form-label">`\lambda` = </label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" placeholder="Size of Field" aria-label="default input example" id="input-field-size" name="l" disabled = "true">
+              </div>
             </div>
-
-            <h5 style="color:DarkCyan;">Results</h5>
-            <div class="col-12">
-              <p style="color:Crimson;">{{ result }}</p>
+            
+            <div class="row">
+              <div class="col">
+                <input type="submit" class="btn btn-primary" value="Calculate">
+              </div>
             </div>
         </div>
     </form>
     </div>
     </main>
-    <footer class="my-5 pt-5 text-muted text-center text-small">
-      <p class="mb-1">&copy; 2024 <a href="https://crypto.sjtu.edu.cn/lab/">Lattice Lab, SJTU</a></p>
-    </footer>
     </div>
   <div id="loading" class="submit_loading" style="display:none">
     <div class="loading_show">
@@ -192,45 +243,13 @@
     </div>
   </div>
 
-    <script>
-      function change_op_input(checkbox_id){
-        var checkbox = document.getElementById(checkbox_id);
-        if(checkbox.checked){
-          {% comment %} enable the input of n {% endcomment %}
-            var input_n = document.getElementById('input-dual-n');
-            input_n.disabled = false;
-            var input_k = document.getElementById('input-secret-len');
-            input_k.disabled = true;
-        } else {
-          {% comment %} disable the input of n {% endcomment %}
-            var input_n = document.getElementById('input-dual-n');
-            input_n.disabled = true;
-            var input_k = document.getElementById('input-secret-len');
-            input_k.disabled = false;
-        }
-      }
-    </script>
-    <script>
-      function type_choose(checkbox_id){
-        var plain = document.getElementById('1');
-        var ring = document.getElementById('2');
-        var field = document.getElementById('3');
-        var input_field_size = document.getElementById('input-field-size');
-        var input_ring_size = document.getElementById('input-ring-size');
-
-        if(plain.checked){
-          input_field_size.disabled = true;
-          input_ring_size.disabled = true;
-        } else if(ring.checked){
-          input_field_size.disabled = true;
-          input_ring_size.disabled = false;
-        } else if(field.checked){
-          input_field_size.disabled = false;
-          input_ring_size.disabled = true;
-        }
-      }
-    </script>
-
+    <div class="container">
+      <div class="row">
+        <h5 style="color:DarkCyan;">Results</h5>
+        <div class="col">
+          <p style="color:Crimson;">{{ result }}</p>
+        </div>
+      </div>
     <script>
       function validateForm(form_id) {
         var N = document.getElementById("input-query-num").value;
