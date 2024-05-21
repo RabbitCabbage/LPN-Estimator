@@ -10,7 +10,7 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
     </script>
 </head>
-{% comment %} change the color of form-check-input: checked {% endcomment %}
+
 <style>
   .form-check-input{
     border-color: Grey;
@@ -84,19 +84,16 @@
         </div>
       </div>
     </nav>
-    {% comment %} <form role="form" method="post" action="/show/"> {% endcomment %}
 
       <script>
         function change_op_input(checkbox_id){
           var checkbox = document.getElementById(checkbox_id);
           if(checkbox.checked){
-            {% comment %} enable the input of n {% endcomment %}
               var input_n = document.getElementById('input-dual-n');
               input_n.disabled = false;
               var input_k = document.getElementById('input-secret-len');
               input_k.disabled = true;
           } else {
-            {% comment %} disable the input of n {% endcomment %}
               var input_n = document.getElementById('input-dual-n');
               input_n.disabled = true;
               var input_k = document.getElementById('input-secret-len');
@@ -138,31 +135,31 @@
           var ring = document.getElementById("2").checked;
   
           // N must be positive integers, without other characters
-          if (N == "" || isNaN(N) || N <= 0) {
+          if (N == "" || isNaN(N) || Number(N) <= 0) {
             alert("Number of queries must be a positive integer");
             return false;
           }
-          if (!dual && (k == "" || isNaN(k) || k <= 0)) {
+          if (!dual && (k == "" || isNaN(k) || Number(k) <= 0)) {
             alert("Length of secret must be a positive integer");
             return false;
           }
-          if (t == "" || isNaN(t) || t <= 0) {
+          if (t == "" || isNaN(t) || Number(t) <= 0) {
             alert("Hamming weight of noise must be a positive integer");
             return false;
           }
-          if (dual && (n == "" || isNaN(n) || n <= 0)) {
+          if (dual && (n == "" || isNaN(n) || Number(n) <= 0)) {
             alert("Corresponding to COT/VOLE correlations must be a positive integer");
             return false;
           }
-          if (field && (l == "" || isNaN(l) || l <= 0)) {
+          if (field && (l == "" || isNaN(l) || Number(t) <= 0)) {
             alert("Size of field must be a positive integer");
             return false;
           }
-          if (ring && (q == "" || isNaN(q) || q <= 0)) {
+          if (ring && (q == "" || isNaN(q) || Number(q) <= 0)) {
             alert("Bit size of ring must be a positive integer");
             return false;
           }
-          else if (k >= N) {
+          else if (Number(N) <= Number(k)) {
             alert("Length of secret must be less than number of queries");
             return false;
           }
@@ -181,7 +178,6 @@
         {% csrf_token %}
         <div class="row g-3">
 
-          {% comment %} Noise Distribution {% endcomment %}
             <div class="col-12 col-sm-6">
               <h5 style="color:DarkCyan;">Noise Distribution</h5>
               <div class="form-check form-check-inline">
@@ -194,7 +190,6 @@
               </div>
             </div>
             
-            {% comment %} Dual form {% endcomment %}
             <div class="col-12 col-sm-6">
               <h5 style="color:DarkCyan;">Decoding Type</h5>
               <div class="from-switch form-switch form-switch-inline">
@@ -204,7 +199,6 @@
             </div>
 
           <div>
-            {% comment %} Algebra Structure {% endcomment %}
             <div class="col-12">
                 <h5 style="color:DarkCyan;">Algebra Structure</h5>
                 <div class="form-check form-check-inline">
@@ -237,7 +231,7 @@
             {% comment %} <h5 style="color:DarkCyan;">Parameters</h5> {% endcomment %}
             <div class="col-12">
               <label for="input-query-num" class="col-form-label">Number of Queries (N) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-query-num" name="N">
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-query-num" name="N" value="1024">
             </div>
 
 
@@ -248,12 +242,12 @@
 
             <div class="col-12">
               <label for="input-secret-len" class="col-form-label">Length of Secret (k)</label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-secret-len" name="k">
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-secret-len" name="k" value="652">
             </div>
 
             <div class="col-12">
               <label for="input-noise-weight" class="col-form-label">Hamming Weight of Noise (t)</label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-noise-weight" name="t">
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-noise-weight" name="t" value="88">
             </div>
           </div>
             
