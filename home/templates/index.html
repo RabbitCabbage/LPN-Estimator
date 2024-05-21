@@ -54,7 +54,7 @@
     left:0;
     background-color:#000;
     text-align:center;
-    opacity:0.3;
+    opacity:0.6;
   }
   .loading_show {
       margin-top:15%;
@@ -62,7 +62,9 @@
   .loading_context {
       color:#fff;
   }
-  {% comment %} DarkSlateGray {% endcomment %}
+  .collapse navbar-collapse {
+    background-color: #E9E9E9;
+  }
 </style>
 <body class="bg-light">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
@@ -77,11 +79,96 @@
           <div class="navbar-nav">
             <a class="nav-link active" aria-current="page" href="/">Home</a>
             <a class="nav-link" href="/contact">Contact</a>
+            <a class="nav-link" href="https://github.com/RabbitCabbage/LPN-Estimator">GitHub</a>
           </div>
         </div>
       </div>
     </nav>
     {% comment %} <form role="form" method="post" action="/show/"> {% endcomment %}
+
+      <script>
+        function change_op_input(checkbox_id){
+          var checkbox = document.getElementById(checkbox_id);
+          if(checkbox.checked){
+            {% comment %} enable the input of n {% endcomment %}
+              var input_n = document.getElementById('input-dual-n');
+              input_n.disabled = false;
+              var input_k = document.getElementById('input-secret-len');
+              input_k.disabled = true;
+          } else {
+            {% comment %} disable the input of n {% endcomment %}
+              var input_n = document.getElementById('input-dual-n');
+              input_n.disabled = true;
+              var input_k = document.getElementById('input-secret-len');
+              input_k.disabled = false;
+          }
+        }
+      </script>
+      <script>
+        function type_choose(checkbox_id){
+          var plain = document.getElementById('1');
+          var ring = document.getElementById('2');
+          var field = document.getElementById('3');
+          var input_field_size = document.getElementById('input-field-size');
+          var input_ring_size = document.getElementById('input-ring-size');
+  
+          if(plain.checked){
+            input_field_size.disabled = true;
+            input_ring_size.disabled = true;
+          } else if(ring.checked){
+            input_field_size.disabled = true;
+            input_ring_size.disabled = false;
+          } else if(field.checked){
+            input_field_size.disabled = false;
+            input_ring_size.disabled = true;
+          }
+        }
+      </script>
+  
+      <script>
+        function validateForm(form_id) {
+          var N = document.getElementById("input-query-num").value;
+          var k = document.getElementById("input-secret-len").value;
+          var t = document.getElementById("input-noise-weight").value;
+          var q = document.getElementById("input-ring-size").value;
+          var l = document.getElementById("input-field-size").value;
+          var n = document.getElementById("input-dual-n").value;
+          var dual = document.getElementById("dual_switch").checked;
+          var field = document.getElementById("3").checked;
+          var ring = document.getElementById("2").checked;
+  
+          // N must be positive integers, without other characters
+          if (N == "" || isNaN(N) || N <= 0) {
+            alert("Number of queries must be a positive integer");
+            return false;
+          }
+          if (!dual && (k == "" || isNaN(k) || k <= 0)) {
+            alert("Length of secret must be a positive integer");
+            return false;
+          }
+          if (t == "" || isNaN(t) || t <= 0) {
+            alert("Hamming weight of noise must be a positive integer");
+            return false;
+          }
+          if (dual && (n == "" || isNaN(n) || n <= 0)) {
+            alert("Corresponding to COT/VOLE correlations must be a positive integer");
+            return false;
+          }
+          if (field && (l == "" || isNaN(l) || l <= 0)) {
+            alert("Size of field must be a positive integer");
+            return false;
+          }
+          if (ring && (q == "" || isNaN(q) || q <= 0)) {
+            alert("Bit size of ring must be a positive integer");
+            return false;
+          }
+          else if (k >= N) {
+            alert("Length of secret must be less than number of queries");
+            return false;
+          }
+          document.getElementById("loading").style.display = "block";
+        }
+      </script>
     
     <div class="container">
     <main>
@@ -186,90 +273,12 @@
       <p class="mb-1">&copy; 2024 <a href="https://crypto.sjtu.edu.cn/lab/">Lattice Lab, SJTU</a></p>
     </footer>
     </div>
+
   <div id="loading" class="submit_loading" style="display:none">
     <div class="loading_show">
         <p class="loading_context">Computing... This may take a few moments...</p>
     </div>
   </div>
 
-    <script>
-      function change_op_input(checkbox_id){
-        var checkbox = document.getElementById(checkbox_id);
-        if(checkbox.checked){
-          {% comment %} enable the input of n {% endcomment %}
-            var input_n = document.getElementById('input-dual-n');
-            input_n.disabled = false;
-            var input_k = document.getElementById('input-secret-len');
-            input_k.disabled = true;
-        } else {
-          {% comment %} disable the input of n {% endcomment %}
-            var input_n = document.getElementById('input-dual-n');
-            input_n.disabled = true;
-            var input_k = document.getElementById('input-secret-len');
-            input_k.disabled = false;
-        }
-      }
-    </script>
-    <script>
-      function type_choose(checkbox_id){
-        var plain = document.getElementById('1');
-        var ring = document.getElementById('2');
-        var field = document.getElementById('3');
-        var input_field_size = document.getElementById('input-field-size');
-        var input_ring_size = document.getElementById('input-ring-size');
-
-        if(plain.checked){
-          input_field_size.disabled = true;
-          input_ring_size.disabled = true;
-        } else if(ring.checked){
-          input_field_size.disabled = true;
-          input_ring_size.disabled = false;
-        } else if(field.checked){
-          input_field_size.disabled = false;
-          input_ring_size.disabled = true;
-        }
-      }
-    </script>
-
-    <script>
-      function validateForm(form_id) {
-        var N = document.getElementById("input-query-num").value;
-        var k = document.getElementById("input-secret-len").value;
-        var t = document.getElementById("input-noise-weight").value;
-        var q = document.getElementById("input-ring-size").value;
-        var l = document.getElementById("input-field-size").value;
-        var n = document.getElementById("input-dual-n").value;
-        var dual = document.getElementById("dual_switch").checked;
-        var field = document.getElementById("3").checked;
-        var ring = document.getElementById("2").checked;
-
-        // N must be positive integers, without other characters
-        if (N == "" || isNaN(N) || N <= 0) {
-          alert("Number of queries must be a positive integer");
-          return false;
-        }
-        if (!dual && (k == "" || isNaN(k) || k <= 0)) {
-          alert("Length of secret must be a positive integer");
-          return false;
-        }
-        if (t == "" || isNaN(t) || t <= 0) {
-          alert("Hamming weight of noise must be a positive integer");
-          return false;
-        }
-        if (dual && (n == "" || isNaN(n) || n <= 0)) {
-          alert("Corresponding to COT/VOLE correlations must be a positive integer");
-          return false;
-        }
-        if (field && (l == "" || isNaN(l) || l <= 0)) {
-          alert("Size of field must be a positive integer");
-          return false;
-        }
-        if (ring && (q == "" || isNaN(q) || q <= 0)) {
-          alert("Bit size of ring must be a positive integer");
-          return false;
-        }
-        document.getElementById("loading").style.display = "block";
-      }
-    </script>
 </body>
 </html>
