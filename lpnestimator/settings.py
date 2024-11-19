@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-mjupotq(kkhcr(r2)em76+sn8wnzwdby1r^%qxq3zq8=q@*lr1
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'sky.gossip.team',
     '207.180.244.183',
     '127.0.0.1'
 ]
