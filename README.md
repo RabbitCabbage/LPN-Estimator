@@ -30,12 +30,14 @@ You can also put your sample on larger fields for more algebraic structures and 
 
 The application is written in Python 3.12.3 and requires the following packages:
 
->asgiref==3.8.1
->Django==5.1.4
->gunicorn==23.0.0
->numpy==2.2.1
->packaging==24.2
->sqlparse==0.5.3
+```txt
+asgiref==3.8.1
+Django==5.1.4
+gunicorn==23.0.0
+numpy==2.2.1
+packaging==24.2
+sqlparse==0.5.3
+```
 
 which can be installed in a virtual environment using the following command:
 
