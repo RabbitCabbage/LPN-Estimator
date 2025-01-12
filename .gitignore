@@ -53,3 +53,16 @@ Thumbs.db
 nginx.conf
 logs/
 temp/
+
+# C/C++ executable binary files
+*.exe
+*.out
+*.o
+*.obj
+*.dll
+*.lib
+*.a
+*.so
+
+# Specific executable file
+estimante/code
