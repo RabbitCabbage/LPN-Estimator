@@ -1,0 +1,55 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media
+
+# Environments
+.env
+venv/
+ENV/
+env.bak/
+venv.bak/
+venv_*/
+
+# Django specific
+*.mo
+*.py[cod]
+*.sqlite3
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+*.coverage
+.coverage.*
+.cache
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+htmlcov/
+dist/
+build/
+docs/_build/
+*.so
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Nginx
+nginx.conf
+logs/
+temp/

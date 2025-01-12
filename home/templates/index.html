@@ -79,6 +79,7 @@
           <div class="navbar-nav">
             <a class="nav-link active" aria-current="page" href="/">Home</a>
             <a class="nav-link" href="/contact">Contact</a>
+            <a class="nav-link" href="/help">Help</a>
             <a class="nav-link" href="https://github.com/RabbitCabbage/LPN-Estimator">GitHub</a>
           </div>
         </div>
@@ -124,7 +125,7 @@
   
       <script>
         function validateForm(form_id) {
-          var N = document.getElementById("input-query-num").value;
+          var N = document.getElementById("input-sample-num").value;
           var k = document.getElementById("input-secret-len").value;
           var t = document.getElementById("input-noise-weight").value;
           var q = document.getElementById("input-ring-size").value;
@@ -136,7 +137,7 @@
   
           // N must be positive integers, without other characters
           if (N == "" || isNaN(N) || Number(N) <= 0) {
-            alert("Number of queries must be a positive integer");
+            alert("Number of samples must be a positive integer");
             return false;
           }
           if (!dual && (k == "" || isNaN(k) || Number(k) <= 0)) {
@@ -160,7 +161,7 @@
             return false;
           }
           else if (Number(N) <= Number(k)) {
-            alert("Length of secret must be less than number of queries");
+            alert("Length of secret must be less than number of samples");
             return false;
           }
           document.getElementById("loading").style.display = "block";
@@ -207,11 +208,11 @@
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio"   name="field" value="rq" id="2" onclick="type_choose('2')">
-                  <lable class="form-check-label" for="2">Over `\mathcal R_q`</label>
+                  <lable class="form-check-label" for="2">Over `\mathbb{F}_q`</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio"   name="field" value="f2l" id="3" onclick="type_choose('3')">
-                  <lable class="form-check-label" for="3">Over `\mathbb{F}_{2^\lambda}`</label>
+                  <lable class="form-check-label" for="3">Over `\mathbb{Z}_{2^\lambda}`</label>
                 </div>
             </div>
 
@@ -230,8 +231,8 @@
             <h5 style="color:DarkCyan;">Parameters</h5>
             {% comment %} <h5 style="color:DarkCyan;">Parameters</h5> {% endcomment %}
             <div class="col-12">
-              <label for="input-query-num" class="col-form-label">Number of Queries (N) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-query-num" name="N" value="1024">
+              <label for="input-sample-num" class="col-form-label">Number of Samples (N) </label>
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-sample-num" name="N" value="1024">
             </div>
 
 

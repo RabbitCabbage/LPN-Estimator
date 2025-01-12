@@ -116,3 +116,6 @@ def _calculator(request,res_dict):
 
 def contact(request):
     return render(request, 'contact.html')
+
+def help(request):
+    return render(request, 'help.html')
