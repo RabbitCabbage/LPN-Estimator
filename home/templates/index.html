@@ -160,8 +160,12 @@
             alert("Bit size of ring must be a positive integer");
             return false;
           }
-          else if (Number(N) <= Number(k)) {
-            alert("Length of secret must be less than number of samples");
+          else if (!dual && Number(N) <= Number(k)) {
+            alert("Length of secret must be less than number of samples, N = " + N + ", k = " + k);
+            return false;
+          }
+          else if (dual && Number(N) <= Number(n)) {
+            alert("Corresponding to COT/VOLE correlations must be less than number of samples, N = " + N + ", n = " + n);
             return false;
           }
           document.getElementById("loading").style.display = "block";
