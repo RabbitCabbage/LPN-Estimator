@@ -105,20 +105,20 @@
       <script>
         function type_choose(checkbox_id){
           var plain = document.getElementById('1');
-          var ring = document.getElementById('2');
-          var field = document.getElementById('3');
-          var input_field_size = document.getElementById('input-field-size');
+          var field = document.getElementById('2');
+          var ring = document.getElementById('3');
           var input_ring_size = document.getElementById('input-ring-size');
+          var input_field_size = document.getElementById('input-field-size');
   
           if(plain.checked){
-            input_field_size.disabled = true;
             input_ring_size.disabled = true;
-          } else if(ring.checked){
             input_field_size.disabled = true;
-            input_ring_size.disabled = false;
           } else if(field.checked){
-            input_field_size.disabled = false;
+            input_ring_size.disabled = false;
+            input_field_size.disabled = true;
+          } else if(ring.checked){
             input_ring_size.disabled = true;
+            input_field_size.disabled = false;
           }
         }
       </script>
@@ -128,8 +128,8 @@
           var N = document.getElementById("input-sample-num").value;
           var k = document.getElementById("input-secret-len").value;
           var t = document.getElementById("input-noise-weight").value;
-          var q = document.getElementById("input-ring-size").value;
-          var l = document.getElementById("input-field-size").value;
+          var q = document.getElementById("input-field-size").value;
+          var l = document.getElementById("input-ring-size").value;
           var n = document.getElementById("input-dual-n").value;
           var dual = document.getElementById("dual_switch").checked;
           var field = document.getElementById("3").checked;
@@ -217,13 +217,13 @@
             </div>
 
             <div class="col-12">
-              <label for="input-ring-size" class="col-form-label">Bit Size of Ring (q) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-ring-size" name="q" disabled = "true">
+              <label for="input-field-size" class="col-form-label">Size of Field (q) </label>
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-field-size" name="q" disabled = "true">
             </div>
             
             <div class="col-12">
-              <label for="input-field-size" class="col-form-label">Size of Field (`\lambda`) </label>
-                <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-field-size" name="l" disabled = "true">
+              <label for="input-ring-size" class="col-form-label">Bit Size of Ring (`\lambda`) </label>
+                <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-ring-size" name="l" disabled = "true">
             </div>
           </div>
 
@@ -237,7 +237,7 @@
 
 
             <div class="col-12">
-              <label for="input-dual-n" class="col-form-label">Corresponing to COT/VOLE Correlations (n) </label>
+              <label for="input-dual-n" class="col-form-label">Corresponding to COT/VOLE Correlations (n) </label>
               <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-dual-n" name="n" disabled = "true">
             </div>
 

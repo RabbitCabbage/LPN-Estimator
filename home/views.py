@@ -22,15 +22,15 @@ def _calculator_with_timeout(request):
 
     p = Process(target=_calculator, args=(request,res_dict))
     p.start()
-    p.join(60)
+    p.join(600)
     if p.is_alive():
         p.terminate()
         p.join()
         return render(request, 'index.html', {'result': "Timeout."})
     #return the output of process p
     
-
-    cache[str(keys)] = res_dict['result']
+    if res_dict['result'] != "Please fill out all fields.":
+        cache[str(keys)] = res_dict['result']
 
     return  render(request, 'index.html', {'result': res_dict['result']})
 
@@ -44,12 +44,14 @@ def calculator(request):
 
 
 def _calculator(request,res_dict):
+    print("Calculating...")
+    print(request.POST)
     noise = request.POST.get('noise') # exact or regular
     dual = request.POST.get('dual') # on or None
     field = request.POST.get('field') # f2 rq or f2l
     N, n, k, t, q, l = 0, 0, 0, 0, 0, 0
     N = request.POST.get('N')
-    if(dual == 'on'):
+    if(dual == 'dual'):
         n = request.POST.get('n')
     k = request.POST.get('k')
     t = request.POST.get('t')
@@ -59,11 +61,11 @@ def _calculator(request,res_dict):
         l = request.POST.get('l')
 
     result = ""
-    if N != None and N != "" and ((dual == 'on' and n != None and n != "") or (dual == None and k != None and k != "")) and t != None and t != "" and ((field == 'rq' and q != None and q != "") or (field == 'f2l' and l != None and l != "") or field == 'f2'):
+    if N != None and N != "" and ((dual == 'dual' and n != None and n != "") or (dual == None and k != None and k != "")) and t != None and t != "" and ((field == 'rq' and q != None and q != "") or (field == 'f2l' and l != None and l != "") or field == 'f2'):
         
         # convert to int
         N = int(N)
-        if(dual == 'on'):
+        if(dual == 'dual'):
             n = int(n)
         else:
             k = int(k)
@@ -74,7 +76,7 @@ def _calculator(request,res_dict):
             l = int(l)
             
         # compute the result
-        if dual == 'on':
+        if dual == 'dual':
             if field == 'f2':
                 if noise == 'exact':
                     result = "bit security of dual exact LPN (n=" + str(n) + ", N=" + str(N) + ", t=" + str(t) + "): " + str(home.estimator.analysisfordual2(n, N, t)) + " bits"
