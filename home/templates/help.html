@@ -75,7 +75,8 @@
           supports analysis under exact or regular noise mode, and considers
           attacks including:</p>
           <ul>
-          <li>Plain Gauss Elimination</li>
+          <li>Plain Gauss Elimination<br />
+          </li>
           <li>Statistical Decoding and its <a
           href="https://eprint.iacr.org/2022/1000.pdf">2.0</a></li>
           <li>Information Set Decoding (including standard and BJMM variants)</li>
@@ -96,20 +97,30 @@
           the noise</li>
           </ul>
           <p>And here are the parameters needed for the dual LPN, i.e., Syndrome
-          Decoding sample you want to analyze: 
-          </p>
-          <ul><li><span
-            class="math inline"><em>n</em></span>: the number of correlations used
-            in the dual LPN problem, another scale of the parity check matrix</li></ul>
+          Decoding sample you want to analyze:</p>
+          <ul>
+          <li><span class="math inline"><em>n</em></span>: the number of
+          correlations used in the dual LPN problem, another scale of the parity
+          check matrix</li>
+          </ul>
+          <p>From the view of Syndrome Decoding problem, e.g. <span
+          class="math inline"><strong>H</strong><strong>e</strong><sup><em>T</em></sup> = <strong>s</strong></span>,
+          <span class="math inline"><em>n</em></span> is the length of the
+          syndrome vector <span class="math inline"><strong>s</strong></span>,
+          <span class="math inline"><em>N</em></span> is the length of the
+          solution vector <span class="math inline"><em>e</em></span>, and the
+          parameter <span class="math inline"><em>t</em></span> is the Hamming
+          weight bound of the solution, i.e. <span
+          class="math inline">|<strong>e</strong>| ≤ <em>t</em></span>.</p>
           <p>You can also put your sample on larger fields for more algebraic
           structures and specify the field with:</p>
           <ul>
           <li><span class="math inline"><em>q</em></span>: the size of the field
           if you want to use finite field <span
-          class="math inline">`\mathbb{F}`<sub><em>q</em></sub></span></li>
+          class="math inline">𝔽<sub><em>q</em></sub></span></li>
           <li><span class="math inline"><em>λ</em></span>: the logarithm size of
           the ring if you want to use ring <span
-          class="math inline"><em>`\mathbb{Z}`</em><sub>2<sup><em>λ</em></sup></sub></span></li>
+          class="math inline">ℤ<sub>2<sup><em>λ</em></sup></sub></span></li>
           </ul>
       </div>
       </main>

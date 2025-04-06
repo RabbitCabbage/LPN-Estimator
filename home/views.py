@@ -48,20 +48,20 @@ def _calculator(request,res_dict):
     print(request.POST)
     noise = request.POST.get('noise') # exact or regular
     dual = request.POST.get('dual') # on or None
-    field = request.POST.get('field') # f2 rq or f2l
+    structure = request.POST.get('structure') # f2 fq or z2l
     N, n, k, t, q, l = 0, 0, 0, 0, 0, 0
     N = request.POST.get('N')
     if(dual == 'dual'):
         n = request.POST.get('n')
     k = request.POST.get('k')
     t = request.POST.get('t')
-    if(field == 'rq'):
+    if(structure == 'fq'):
         q = request.POST.get('q')
-    if(field == 'f2l'):
+    if(structure == 'z2l'):
         l = request.POST.get('l')
 
     result = ""
-    if N != None and N != "" and ((dual == 'dual' and n != None and n != "") or (dual == None and k != None and k != "")) and t != None and t != "" and ((field == 'rq' and q != None and q != "") or (field == 'f2l' and l != None and l != "") or field == 'f2'):
+    if N != None and N != "" and ((dual == 'dual' and n != None and n != "") or (dual == None and k != None and k != "")) and t != None and t != "" and ((structure == 'fq' and q != None and q != "") or (structure == 'z2l' and l != None and l != "") or structure == 'f2'):
         
         # convert to int
         N = int(N)
@@ -70,24 +70,24 @@ def _calculator(request,res_dict):
         else:
             k = int(k)
         t = int(t)
-        if(field == 'rq'):
+        if(structure == 'fq'):
             q = int(q)
-        if(field == 'f2l'):
+        if(structure == 'z2l'):
             l = int(l)
             
         # compute the result
         if dual == 'dual':
-            if field == 'f2':
+            if structure == 'f2':
                 if noise == 'exact':
                     result = "bit security of dual exact LPN (n=" + str(n) + ", N=" + str(N) + ", t=" + str(t) + "): " + str(home.estimator.analysisfordual2(n, N, t)) + " bits"
                 elif noise == 'regular':
                     result = "bit security of dual regular LPN (n=" + str(n) + ", N=" + str(N) + ", t=" + str(t) + "): "+ str(home.estimator.analysisfordual2regular(n, N, t)) + " bits"
-            elif field == 'rq':
+            elif structure == 'fq':
                 if noise == 'exact':
                     result = "bit security of dual exact LPN (n=" + str(n) + ", N=" + str(N) + ", t=" + str(t) + ", q=" + str(q) + "): " + str(home.estimator.analysisfordualq(n, N, t, q)) + " bits"
                 elif noise == 'regular':
                     result = "bit security of regular LPN (n=" + str(n) + ", N=" + str(N) + ", t=" + str(t) + ", q=" + str(q) + "): " + str(home.estimator.analysisfordualqregular(n, N, t, q)) + " bits"
-            elif field == 'f2l':
+            elif structure == 'z2l':
                 if noise == 'exact':
                     result = "bit security of dual exact LPN (n=" + str(n) + ", N=" + str(N) + ", t=" + str(t) + ", lambda=" + str(
                     l) + "): " + str(home.estimator.analysisfordual2lambda(n, N, t, l)) + " bits"
@@ -95,17 +95,18 @@ def _calculator(request,res_dict):
                     result = "bit security of dual regular LPN (n=" + str(n) + ", N=" + str(N) + ", t=" + str(t) + ", lambda=" + str(
                     l) + "): " + str(home.estimator.analysisfordual2lambdaregular(n, N, t, l)) + " bits"
         else:
-            if field == 'f2':
+            if structure == 'f2':
                 if noise == 'exact':
+                    print("exact LPN")
                     result = "bit security of exact LPN (N=" + str(N) + ", k=" + str(k) + ", t=" + str(t) + "): " + str(home.estimator.analysisfor2(N, k, t)) + " bits"
                 elif noise == 'regular':
                     result = "bit security of regular LPN (N=" + str(N) + ", k=" + str(k) + ", t=" + str(t) + "): " + str(home.estimator.analysisfor2regular(N, k, t)) + " bits"
-            elif field == 'rq':
+            elif structure == 'fq':
                 if noise == 'exact':
                     result = "bit security of exact LPN (N=" + str(N) + ", k=" + str(k) + ", t=" + str(t) + ", q=" + str(q) + "): " + str(home.estimator.analysisforq(N, k, t, q)) + " bits"
                 elif noise == 'regular':
                     result = "bit security of regular LPN (N=" + str(N) + ", k=" + str(k) + ", t=" + str(t) + ", q=" + str(q) + "): " + str(home.estimator.analysisforqregular(N, k, t, q)) + " bits"
-            elif field == 'f2l':
+            elif structure == 'z2l':
                 if noise == 'exact':
                     result = "bit security of exact LPN (N=" + str(N) + ", k=" + str(k) + ", t=" + str(t) + ", lambda=" + str(l) + "): " + str(home.estimator.analysisfor2lambda(N, k, t, l)) + " bits"
                 elif noise == 'regular':

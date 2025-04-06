@@ -114,11 +114,11 @@
             input_ring_size.disabled = true;
             input_field_size.disabled = true;
           } else if(field.checked){
-            input_ring_size.disabled = false;
-            input_field_size.disabled = true;
-          } else if(ring.checked){
             input_ring_size.disabled = true;
             input_field_size.disabled = false;
+          } else if(ring.checked){
+            input_ring_size.disabled = false;
+            input_field_size.disabled = true;
           }
         }
       </script>
@@ -132,8 +132,9 @@
           var l = document.getElementById("input-ring-size").value;
           var n = document.getElementById("input-dual-n").value;
           var dual = document.getElementById("dual_switch").checked;
-          var field = document.getElementById("3").checked;
-          var ring = document.getElementById("2").checked;
+          var field = document.getElementById("2").checked;
+          var ring = document.getElementById("3").checked;
+          // alert("N = " + N + ", k = " + k + ", t = " + t + ", q = " + q + ", l = " + l + ", n = " + n);
   
           // N must be positive integers, without other characters
           if (N == "" || isNaN(N) || Number(N) <= 0) {
@@ -152,23 +153,73 @@
             alert("Corresponding to COT/VOLE correlations must be a positive integer");
             return false;
           }
-          if (field && (l == "" || isNaN(l) || Number(t) <= 0)) {
-            alert("Size of field must be a positive integer");
-            return false;
-          }
-          if (ring && (q == "" || isNaN(q) || Number(q) <= 0)) {
+          if (ring && (l == "" || isNaN(l) || Number(t) <= 0)) {
             alert("Bit size of ring must be a positive integer");
             return false;
           }
-          else if (!dual && Number(N) <= Number(k)) {
+          if (field && (q == "" || isNaN(q) || Number(q) <= 0)) {
+            alert("Size of field must be a positive integer");
+            return false;
+          }
+          if (dual) {
+            k = Number(N) - Number(n);
+          } else {
+            n = Number(N) - Number(k);
+          }
+          if (!dual && Number(N) <= Number(k)) {
             alert("Length of secret must be less than number of samples, N = " + N + ", k = " + k);
             return false;
           }
           else if (dual && Number(N) <= Number(n)) {
             alert("Corresponding to COT/VOLE correlations must be less than number of samples, N = " + N + ", n = " + n);
             return false;
+          } 
+          else if (Number(N) < Number(t)) {
+            alert("Hamming weight of noise must be less than number of samples, N = " + N + ", t = " + t);
+            return false;
+          } 
+          else if (field && (Number(q) <= 2 || !Number.isInteger(Number(q)))) {
+            alert("For field `\\mathbb{F}_q`, size q must be an integer greater than 2");
+            return false;
           }
+          else if (ring && (Number(l) <= 1 || !Number.isInteger(Number(l)))) {
+            alert("For ring `\\mathbb{Z}_{2^\\lambda}`, bit size \\lambda must be an integer greater than 1");
+            return false;
+          }
+          else if (Number(n) <= Number(t)) {
+            alert("Corresponding to COT/VOLE correlations must be greater than Hamming weight of noise, n = " + n + ", t = " + t);
+            return false;
+          } 
           document.getElementById("loading").style.display = "block";
+        }
+
+        function ComputeParams(form_id) {
+          var dual = document.getElementById("dual_switch").checked;
+          if (dual) {
+                // input N and n, compute k = N - n
+                var N = document.getElementById("input-sample-num").value;
+                var n = document.getElementById("input-dual-n").value;
+                if (isNaN(N) || isNaN(n) || N === "" || n === "") {
+                  document.getElementById("input-secret-len").value = 0;
+                } else if (Number(N) <= Number(n)) {
+                  // not valid, give a warning
+                  document.getElementById("input-secret-len").value = "not valid";
+                } else {
+                  document.getElementById("input-secret-len").value = Number(N) - Number(n);
+                }
+          } else {
+            // input N and k, compute n = N - k
+            var N = document.getElementById("input-sample-num").value;
+            var k = document.getElementById("input-secret-len").value;
+            if (isNaN(N) || isNaN(k) || N === "" || k === "") {
+              document.getElementById("input-dual-n").value = 0;
+            } else if (Number(N) <= Number(k)) {
+              // not valid, give a warning
+              document.getElementById("input-dual-n").value = "not valid";
+            }  else{
+              document.getElementById("input-dual-n").value = Number(N) - Number(k);
+            }
+          }
         }
       </script>
     
@@ -186,11 +237,13 @@
             <div class="col-12 col-sm-6">
               <h5 style="color:DarkCyan;">Noise Distribution</h5>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="noise" id="ex" checked="true" value="exact">
+                <input class="form-check-input" type="radio" name="noise" id="ex" value="exact" 
+                  {% if request.POST.noise == 'exact' or not request.POST.noise %}checked{% endif %}>
                 <label class="form-check-label" for="ex">Exact Weight</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="noise" id="rg" value="regular">
+                <input class="form-check-input" type="radio" name="noise" id="rg" value="regular" 
+                  {% if request.POST.noise == 'regular' %}checked{% endif %}>
                 <label class="form-check-label" for="rg">Regular</label>
               </div>
             </div>
@@ -198,36 +251,46 @@
             <div class="col-12 col-sm-6">
               <h5 style="color:DarkCyan;">Decoding Type</h5>
               <div class="from-switch form-switch form-switch-inline">
-                <input class="form-check-input" name="dual" type="checkbox" role="switch" id="dual_switch" value="dual" onclick="change_op_input('dual_switch')">
+                <input class="form-check-input" name="dual" type="checkbox" role="switch" id="dual_switch" value="dual" onclick="change_op_input('dual_switch')" {% if request.POST.dual == 'dual' %}checked{% endif %}>
                 <label class="form-check-label" for="dual_switch">Dual form of LPN</label>
               </div>
             </div>
 
           <div>
             <div class="col-12">
-                <h5 style="color:DarkCyan;">Algebra Structure</h5>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="field" value="f2" id="1" checked="true" onclick="type_choose('1')">
-                  <lable class="form-check-label" for="1">Over `\mathbb{F}_2`</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio"   name="field" value="rq" id="2" onclick="type_choose('2')">
-                  <lable class="form-check-label" for="2">Over `\mathbb{F}_q`</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio"   name="field" value="f2l" id="3" onclick="type_choose('3')">
-                  <lable class="form-check-label" for="3">Over `\mathbb{Z}_{2^\lambda}`</label>
-                </div>
+              <h5 style="color:DarkCyan;">Algebra Structure</h5>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="structure" value="f2" id="1" 
+                  {% if request.POST.structure == 'f2' or not request.POST.structure %}checked{% endif %} 
+                  onclick="type_choose('1')">
+                <label class="form-check-label" for="1">Over `\mathbb{F}_2`</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="structure" value="fq" id="2" 
+                  {% if request.POST.structure == 'fq' %}checked{% endif %} 
+                  onclick="type_choose('2')">
+                <label class="form-check-label" for="2">Over `\mathbb{F}_q`</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="structure" value="z2l" id="3" 
+                  {% if request.POST.structure == 'z2l' %}checked{% endif %} 
+                  onclick="type_choose('3')">
+                <label class="form-check-label" for="3">Over `\mathbb{Z}_{2^\lambda}`</label>
+              </div>
             </div>
 
             <div class="col-12">
               <label for="input-field-size" class="col-form-label">Size of Field (q) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-field-size" name="q" disabled = "true">
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-field-size" name="q" 
+                value="{{ request.POST.q|default_if_none:'' }}" 
+                {% if request.POST.structure != 'fq' %}disabled{% endif %}>
             </div>
             
             <div class="col-12">
               <label for="input-ring-size" class="col-form-label">Bit Size of Ring (`\lambda`) </label>
-                <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-ring-size" name="l" disabled = "true">
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-ring-size" name="l" 
+                value="{{ request.POST.l|default_if_none:'' }}" 
+                {% if request.POST.structure != 'z2l' %}disabled{% endif %}>
             </div>
           </div>
 
@@ -236,24 +299,28 @@
             {% comment %} <h5 style="color:DarkCyan;">Parameters</h5> {% endcomment %}
             <div class="col-12">
               <label for="input-sample-num" class="col-form-label">Number of Samples (N) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-sample-num" name="N" value="1024">
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-sample-num" name="N" value="{{ request.POST.N|default_if_none:'1024' }}" onkeyup="ComputeParams(this)">
             </div>
 
 
             <div class="col-12">
               <label for="input-dual-n" class="col-form-label">Corresponding to COT/VOLE Correlations (n) </label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-dual-n" name="n" disabled = "true">
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-dual-n" name="n" 
+                {% if request.POST.dual == 'dual' %}enabled="true"{% else %}disabled="true"{% endif %} 
+                onkeyup="ComputeParams(this)" value="{{ request.POST.n|default_if_none:'' }}">
             </div>
 
             <div class="col-12">
               <label for="input-secret-len" class="col-form-label">Length of Secret (k)</label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-secret-len" name="k" value="652">
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-secret-len" name="k" 
+                {% if request.POST.dual == 'dual' %}disabled="true"{% else %}enabled="true"{% endif %} 
+              value="{{ request.POST.k|default_if_none:'652' }}" onkeyup="ComputeParams(this)">
             </div>
 
             <div class="col-12">
               <label for="input-noise-weight" class="col-form-label">Hamming Weight of Noise (t)</label>
-              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-noise-weight" name="t" value="88">
-            </div>
+              <input class="form-control" type="text" placeholder="" aria-label="default input example" id="input-noise-weight" name="t" value="{{ request.POST.t|default_if_none:'88' }}">
+            </div>  
           </div>
             
             <div class="col-12">
